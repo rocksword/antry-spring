@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:component-scan base-package="com.an.antry.spring.schedule.taskexecute" />
+
+    <bean id="taskExecutor"
+        class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <!-- Minimal thread number in pool -->
+        <property name="corePoolSize" value="5" />
+        <!-- Maximal thread number in pool -->
+        <property name="maxPoolSize" value="10" />
+        <!-- Queue size of pool -->
+        <property name="queueCapacity" value="25" />
+    </bean>
+
+    <bean id="taskExecutorExample"
+        class="com.an.antry.spring.schedule.taskexecute.TaskExecutorExample">
+        <constructor-arg ref="taskExecutor" />
+    </bean>
+</beans>
+

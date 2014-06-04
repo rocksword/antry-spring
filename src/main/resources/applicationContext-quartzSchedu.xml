@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/task
+http://www.springframework.org/schema/task/spring-task.xsd">
+    <context:component-scan base-package="com.an.antry.spring.schedule.quartzschedu" />
+
+    <bean name="exampleJob"
+        class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass"
+            value="com.an.antry.spring.schedule.quartzschedu.ExampleJob" />
+        <property name="jobDataAsMap">
+            <map>
+                <entry key="timeout" value="5" />
+            </map>
+        </property>
+        <property name="durability" value="true" />
+    </bean>
+
+    <bean id="exampleBusinessObject"
+        class="com.an.antry.spring.schedule.quartzschedu.ExampleBusinessObject" />
+
+    <bean id="methodJobDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="exampleBusinessObject" />
+        <property name="targetMethod" value="doIt" />
+        <property name="concurrent" value="false" />
+    </bean>
+
+    <bean id="simpleTrigger"
+        class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <!-- see the example of method invoking job above -->
+        <property name="jobDetail" ref="methodJobDetail" />
+        <!-- 10 seconds -->
+        <property name="startDelay" value="10000" />
+        <!-- repeat every 5 seconds -->
+        <property name="repeatInterval" value="5000" />
+    </bean>
+    
+    <bean id="cronTrigger"
+        class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="exampleJob" />
+        <!-- run every morning at 6 AM -->
+        <!-- second,minute,hour,day,month,week,year -->
+        <property name="cronExpression" value="0/1 * * * * ?" />
+    </bean>
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="cronTrigger" />
+                <ref bean="simpleTrigger" />
+            </list>
+        </property>
+    </bean>
+</beans>
+

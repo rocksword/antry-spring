@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "spring-beans.dtd">
+<beans>
+    <bean id="weatherService" class="com.an.antry.spring.appcontext.WeatherServiceImpl">
+        <property name="weatherDao">
+            <ref local="weatherDao" />
+        </property>
+    </bean>
+
+    <bean id="weatherDao"
+        class="com.an.antry.spring.appcontext.StaticDataWeatherDAOImpl">
+    </bean>
+</beans>
+
